@@ -9,7 +9,7 @@ pipeline {
             }
         }
         stage('Run') {
-            agents any {
+            agent any {
                 sh 'cd node-express-hello-world'
                 sh 'npm install'
                 sh 'npm start'
