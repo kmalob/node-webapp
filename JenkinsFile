@@ -1,11 +1,18 @@
 pipeline {
     agent any
     stages {
-        stage('Docker Build') {
+        stage('Git') {
             agent any
             steps {
+                git branch: 'main', credentialsId: '6a64497d-d665-4954-9ce4-e8221175197f', url: 'http://github.com/kmalob/node-webapp'
                 sh 'docker build -t node_app .'
             }
         }
+        stage('Run') {
+            sh 'cd node-express-hello-world'
+            sh 'npm install'
+            sh 'npm start'
+        }
+
     }
 }
