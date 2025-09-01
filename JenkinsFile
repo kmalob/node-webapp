@@ -9,9 +9,11 @@ pipeline {
             }
         }
         stage('Run') {
-            sh 'cd node-express-hello-world'
-            sh 'npm install'
-            sh 'npm start'
+            agents any {
+                sh 'cd node-express-hello-world'
+                sh 'npm install'
+                sh 'npm start'
+            }
         }
 
     }
