@@ -1,20 +1,30 @@
 pipeline {
     agent any
+    environment {
+        dockerImageName = 'node-app'
+        dockerImageTag = 'latest'
+        dockerImage = "${dockerImageName}:${dockerImageTag}"
+    }
     stages {
-        stage('Git') {
-            agent any
+        stage('Clone Repository') {
             steps {
                 git branch: 'main', credentialsId: '6a64497d-d665-4954-9ce4-e8221175197f', url: 'http://github.com/kmalob/node-webapp'
-                sh 'docker build -t node_app .'
             }
         }
-        stage('Run') {
-            agent any {
-                sh 'cd node-express-hello-world'
-                sh 'npm install'
-                sh 'npm start'
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build "${dockerImageName}:${env.BUILD_ID}"
+                }
             }
         }
-
+        stage('Run Container') {
+            steps {
+                script {
+                    docker.image("${dockerImageName}:${env.BUILD_ID}").inside {
+                    }
+                }
+            }
+        }
     }
-}
+}   
